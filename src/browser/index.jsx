@@ -1,11 +1,7 @@
-import './style';
-
+import 'Shared/style';
+import App from 'Shared/App';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-
-const App = () => (
-  <div>Hello World</div>
-);
 
 ReactDOM.render(<App />, document.getElementById("root"));
