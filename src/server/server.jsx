@@ -2,6 +2,7 @@ import path from 'path';
 import App from 'Shared/App.jsx';
 import React from 'react';
 import express from 'express';
+import { StaticRouter } from 'react-router-dom';
 import { renderToString } from 'react-dom/server';
 import fs from 'fs';
 
@@ -9,8 +10,11 @@ import fs from 'fs';
 const app = express();
 app.use('/', express.static(path.resolve(__dirname, 'assets')));
 app.get('*', (req, res) => {
+  const context = {};
   const application = renderToString(
-    <App />
+    <StaticRouter location={req.url} context={context}>
+      <App />
+    </StaticRouter>
   );
 
   // don't need to know when this functions ends cause this is the last one
