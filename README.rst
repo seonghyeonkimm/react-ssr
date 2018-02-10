@@ -1,4 +1,4 @@
-reduce-css-bundle-size
+react SSR
 =========================
 
 - about how to build react-ssr application
