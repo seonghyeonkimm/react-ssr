@@ -1,54 +1,39 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import fetch from 'isomorphic-fetch';
+import { Link, withRouter } from 'react-router-dom';
+import { fetchCoinDetail, clearCoinDetail } from 'Actions/coinActions';
 
-
-const DETAIL = 'https://api.coinmarketcap.com/v1/ticker/';
-//https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=KRW
 
 class Detail extends Component {
-  constructor() {
-    super();
-    this.fetchCoinDetail = this.fetchCoinDetail.bind(this);
-    this.state = {
-      detail: [{
-        symbol: '',
-        rank: '',
-        price_usd: '',
-        price_krw: '',
-        last_updated: '',
-      }],
-    }
+  static getInitialData(params) {
+    const { name } = params;
+    return fetchCoinDetail(name.toLowerCase());
   }
 
   componentDidMount() {
-    this.fetchCoinDetail()
+    const { detail, dispatch, history } = this.props;
+    const { params } = this.props.match;
+    // if client controls the application, this should be called!
+    if (!detail[0].name) {
+      dispatch(Detail.getInitialData(params))
+        .then(result => {
+          if (result.error) {
+            history.replace('/');
+          }
+        });
+    }
   }
 
-  fetchCoinDetail() {
-    const { name } = this.props.match.params;
-    // NOT THE BEST SOLUTION BUT NOT RELATED TO THIS REPO
-    // JUST LET IT WORKING
-    const parsedName = name.split(' ');
-    fetch(`https://api.coinmarketcap.com/v1/ticker/${parsedName.join('-')}/?convert=KRW`, {
-      method: 'GET',
-    }).then(response =>{
-      response.json()
-        .then(
-          detail => this.setState({detail}),
-          () => {}
-        )
-    });
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch(clearCoinDetail());
   }
 
   render() {
-    const coinName = this.props.match.params.name;
-    const { detail } = this.state;
+    const { detail } = this.props;
     const info = detail[0];
     return (
       <div className="coin-detail-container">
-        <h1>This is {coinName} Detail</h1>
-
+        <h1>This is {info.name} Detail</h1>
         <ul className="coin-list">
           <li>symbol: {info.symbol}</li>
           <li>rank: {info.rank}</li>
@@ -62,4 +47,4 @@ class Detail extends Component {
   }
 }
 
-export default Detail;
+export default withRouter(Detail);

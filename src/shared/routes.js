@@ -1,5 +1,5 @@
-import List from 'Shared/List';
-import Detail from 'Shared/Detail';
+import List from 'Shared/ListContainer';
+import Detail from 'Shared/DetailContainer';
 
 export default [
   {
@@ -8,7 +8,7 @@ export default [
     exact: true,
   },
   {
-    path: '/:name',
+    path: '/coin/:name',
     component: Detail,
     exact: true,
   },

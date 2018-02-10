@@ -1,35 +1,23 @@
 import React, { Component } from 'react';
-import fetch from 'isomorphic-fetch';
+import { fetchCoinList } from 'Actions/coinActions';
+import { Link } from 'react-router-dom';
 
 
 class List extends Component {
-  constructor() {
-    super();
-    this.fetchCoinList = this.fetchCoinList.bind(this);
-    this.state = {
-      coin: [],
-    }
+  static getInitialData() {
+    return fetchCoinList();
   }
 
   componentDidMount() {
-    this.fetchCoinList();
-  }
-
-  fetchCoinList() {
-    fetch('https://api.coinmarketcap.com/v1/ticker/?convert=KRW&limit=10', {
-      method: 'GET',
-    }).then(response => {
-      response.json()
-        .then((result) => {
-          this.setState({
-            coin: result,
-          });
-        })
-    }, () => {});
+    const { coin, dispatch } = this.props;
+    // if client controls the application, this should be called!
+    if (!coin.length) {
+      dispatch(List.getInitialData());
+    }
   }
 
   render() {
-    const { coin } = this.state;
+    const { coin } = this.props;
     return (
       <div className="coin-container">
         <h1>This is cryptocurrency information</h1>
@@ -37,12 +25,12 @@ class List extends Component {
           {
             coin.map((item, i) => (
               <li key={i} className="coin">
-                <a href={`/${item.name.toLowerCase()}`}>
+                <Link to={`/coin/${item.name.toLowerCase().split(' ').join('-')}`}>
                   <span className="highlight">
                     Symbol: { item.symbol } /
                   </span>
                   Price: { item.price_krw }
-                </a>
+                </Link>
               </li>
             ))
           }

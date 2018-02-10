@@ -12,6 +12,9 @@ const commonOptions = {
       Shared: path.resolve(__dirname, 'src/shared'),
       Server: path.resolve(__dirname, 'src/server'),
       Browser: path.resolve(__dirname, 'src/browser'),
+      Actions: path.resolve(__dirname, 'src/shared/actions'),
+      Reducers: path.resolve(__dirname, 'src/shared/reducers'),
+      Constants: path.resolve(__dirname, 'src/shared/constants'),
     }
   },
   rules: [
@@ -46,6 +49,7 @@ module.exports = [
     ],
     output: {
       path: path.resolve(__dirname, 'dist/assets'),
+      publicPath: '/',
       filename: 'client.bundle.js',
     },
   },
